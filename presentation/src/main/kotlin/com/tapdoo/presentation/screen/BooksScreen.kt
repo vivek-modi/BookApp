@@ -2,7 +2,9 @@ package com.tapdoo.presentation.screen
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,9 +31,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +68,7 @@ internal fun BookScreen(
 
     val uiState = viewModel.bookUiState
     val snackBarHostState = remember { SnackbarHostState() }
+    var imageWidth by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel) {
         viewModel.getBooks()
@@ -76,7 +90,11 @@ internal fun BookScreen(
                 BookContent(
                     books = uiState.books,
                     contentPadding = contentPadding,
-                    onItemClick = onNavigateToBookDetail
+                    imageWidth = imageWidth,
+                    onImageWidthChange = {
+                        imageWidth = it
+                    },
+                    onItemClick = onNavigateToBookDetail,
                 )
             }
         }
@@ -87,7 +105,9 @@ internal fun BookScreen(
 private fun BookContent(
     books: List<Book>,
     contentPadding: PaddingValues,
-    onItemClick: (Int) -> Unit
+    imageWidth: Int,
+    onImageWidthChange: (Int) -> Unit,
+    onItemClick: (Int) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -105,10 +125,16 @@ private fun BookContent(
             BookInfoSection()
         }
 
+        item {
+            Spacer(Modifier.height(MaterialTheme.spacing.extraLarge))
+        }
+
         items(items = books, key = { it.id }) { book ->
             BookCard(
                 book = book,
                 modifier = Modifier.animateItem(),
+                imageWidth = imageWidth,
+                onImageWidthChange = onImageWidthChange,
                 onItemClick = onItemClick,
             )
         }
@@ -150,25 +176,54 @@ private fun BookInfoSection() {
 }
 
 @Composable
-private fun BookCard(modifier: Modifier = Modifier, book: Book, onItemClick: (Int) -> Unit) {
+private fun BookCard(
+    modifier: Modifier = Modifier,
+    book: Book,
+    imageWidth: Int,
+    onImageWidthChange: (Int) -> Unit,
+    onItemClick: (Int) -> Unit,
+) {
     val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
+    val color = MaterialTheme.colorScheme.surfaceVariant
     Card(
         onClick = {
             onItemClick(book.id)
         },
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.medium,
     ) {
         Row(
             modifier = Modifier
-                .padding(MaterialTheme.spacing.medium)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .drawBehind {
+                    val leftEdge = imageWidth / 2
+                    drawRoundRect(
+                        color = color,
+                        topLeft = Offset(leftEdge.toFloat(), 0f),
+                        size = Size(size.width - leftEdge, size.height),
+                        cornerRadius = CornerRadius(MaterialTheme.spacing.extraMedium.toPx())
+                    )
+                }
+                .padding(
+                    top = MaterialTheme.spacing.medium,
+                    bottom = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
             SubcomposeAsyncImage(
+                modifier = Modifier
+                    .onGloballyPositioned {
+                        onImageWidthChange(it.size.width)
+                    }
+                    .border(
+                        BorderStroke(
+                            MaterialTheme.spacing.extraSmall,
+                            MaterialTheme.colorScheme.outline
+                        ),
+                        RectangleShape
+                    ),
                 model = bookUrl,
                 loading = {
                     CircularProgressIndicator()
@@ -235,7 +290,11 @@ private fun BookCardPreview() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 4.dp,
         ) {
-            BookCard(book = bookState) {}
+            BookCard(
+                book = bookState,
+                imageWidth = 0,
+                onImageWidthChange = {}
+            ) {}
         }
     }
 }
