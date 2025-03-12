@@ -1,6 +1,6 @@
 package com.tapdoo.domain.usecase
 
-import com.tapdoo.domain.model.BookApiModel
+import com.tapdoo.domain.model.Book
 import com.tapdoo.domain.repository.BookApi
 
 /**
@@ -15,7 +15,7 @@ import com.tapdoo.domain.repository.BookApi
  */
 class GetBooksUseCase(private val bookApi: BookApi) {
 
-    suspend operator fun invoke(): Result<List<BookApiModel>> {
+    suspend operator fun invoke(): Result<List<Book>> {
         return bookApi.getBooks()
     }
 }

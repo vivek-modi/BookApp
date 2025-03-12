@@ -1,5 +1,6 @@
 package com.tapdoo.domain.repository
 
+import com.tapdoo.domain.model.Book
 import com.tapdoo.domain.model.BookApiModel
 
 interface BookApi {
@@ -9,7 +10,7 @@ interface BookApi {
      *
      * @return A Result containing either a list of Book objects or an error.
      */
-    suspend fun getBooks(): Result<List<BookApiModel>>
+    suspend fun getBooks(): Result<List<Book>>
 
     /**
      * Retrieves the details of a specific book.

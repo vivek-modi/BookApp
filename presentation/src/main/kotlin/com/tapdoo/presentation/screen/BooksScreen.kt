@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
-import com.tapdoo.domain.model.BookApiModel
+import com.tapdoo.domain.model.Book
 import com.tapdoo.presentation.R
 import com.tapdoo.presentation.viewmodel.BooksViewModel
 import com.tapdoo.ui.components.LoadingOverlay
@@ -81,7 +81,7 @@ internal fun BookScreen(
 
 @Composable
 private fun BookContent(
-    books: List<BookApiModel>,
+    books: List<Book>,
     contentPadding: PaddingValues,
 ) {
     LazyColumn(
@@ -133,7 +133,7 @@ private fun BookInfoSection() {
 }
 
 @Composable
-private fun BookCard(book: BookApiModel, modifier: Modifier = Modifier) {
+private fun BookCard(book: Book, modifier: Modifier = Modifier) {
     val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -176,7 +176,7 @@ private fun BookCard(book: BookApiModel, modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                 Text(
-                    text = "${book.price} ${book.currencyCode}",
+                    text = "${book.price} ${book.currencySymbol}",
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -202,12 +202,12 @@ private fun BookCard(book: BookApiModel, modifier: Modifier = Modifier) {
 )
 @Composable
 private fun BookCardPreview() {
-    val bookState = BookApiModel(
+    val bookState = Book(
         id = 1,
         title = "My book",
         price = 100,
         author = "My Author",
-        currencyCode = "Euro",
+        currencySymbol = "Euro",
         isbn = "1234567890"
     )
     BookAppTheme {
