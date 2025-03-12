@@ -5,11 +5,12 @@ import com.tapdoo.domain.model.BookApiModel
 import com.tapdoo.domain.repository.CurrencyService
 
 /**
- * The `BookMapper` class is responsible for mapping data from the API model (`BookApiModel`)
- * to the domain model (`Book`). It utilizes a `CurrencyService` to retrieve the
- * currency symbol based on the currency code provided in the API data.
+ * The `BookMapper` class is responsible for mapping a list of `BookApiModel` objects
+ * to a list of `Book` objects. It leverages the `CurrencyService` to handle currency
+ * conversions and formatting when creating the `Book` objects.
  *
- * @property currencyService The `CurrencyService` instance used to fetch currency symbols.
+ * @property currencyService The service used for currency-related operations, such as
+ *                           getting the formatted price with the correct currency symbol.
  */
 class BookMapper(private val currencyService: CurrencyService) {
 
@@ -24,8 +25,10 @@ class BookMapper(private val currencyService: CurrencyService) {
             id = this.id,
             title = this.title,
             isbn = this.isbn,
-            price = this.price,
-            currencySymbol = currencyService.getCurrencySymbol(this.currencyCode),
+            priceWithCurrency = currencyService.getPriceWithCurrency(
+                this.price,
+                this.currencyCode
+            ),
             author = this.author,
         )
     }

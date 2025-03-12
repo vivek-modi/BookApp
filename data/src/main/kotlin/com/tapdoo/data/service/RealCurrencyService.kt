@@ -1,17 +1,24 @@
 package com.tapdoo.data.service
 
 import com.tapdoo.domain.repository.CurrencyService
+import java.text.NumberFormat
 import java.util.Currency
 
 /**
- * Service class responsible for handling currency-related operations.
+ * Implementation of the [CurrencyService] interface that provides real currency formatting.
+ *
+ * This class handles the conversion of integer currency values (assumed to be in cents)
+ * to a formatted string representation using the specified currency code.
  */
 class RealCurrencyService : CurrencyService {
-    override fun getCurrencySymbol(currencyCode: String): String {
+
+    override fun getPriceWithCurrency(currencyValue: Int, currencyCode: String): String {
         return try {
-            Currency.getInstance(currencyCode).symbol
+            val format: NumberFormat = NumberFormat.getCurrencyInstance()
+            format.currency = Currency.getInstance(currencyCode)
+            format.format(currencyValue / 100.0)
         } catch (e: IllegalArgumentException) {
-            currencyCode // Fallback to ISO code
+            "$currencyValue $currencyCode" // Fallback to ISO code
         }
     }
 }

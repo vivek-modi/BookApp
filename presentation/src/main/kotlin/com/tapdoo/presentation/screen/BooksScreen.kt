@@ -176,7 +176,7 @@ private fun BookCard(book: Book, modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                 Text(
-                    text = "${book.price} ${book.currencySymbol}",
+                    text = book.priceWithCurrency,
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -205,9 +205,8 @@ private fun BookCardPreview() {
     val bookState = Book(
         id = 1,
         title = "My book",
-        price = 100,
+        priceWithCurrency = "$10.00",
         author = "My Author",
-        currencySymbol = "Euro",
         isbn = "1234567890"
     )
     BookAppTheme {
