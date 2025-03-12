@@ -167,7 +167,7 @@ private fun BookCard(book: Book, modifier: Modifier = Modifier) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "Novel by ${book.author}",
+                    text = stringResource(R.string.novel_by, book.author),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
