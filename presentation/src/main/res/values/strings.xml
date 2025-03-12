@@ -1,5 +1,5 @@
 <resources>
     <string name="hello_name">Hello User</string>
     <string name="book_description">Get your desire books here…</string>
-    <string name="novel_by">Novel by %1$d</string>
+    <string name="novel_by">Novel by %1$s</string>
 </resources>
