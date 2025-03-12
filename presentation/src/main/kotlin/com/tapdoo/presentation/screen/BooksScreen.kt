@@ -2,6 +2,7 @@ package com.tapdoo.presentation.screen
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -111,23 +113,34 @@ private fun BookContent(
 
 @Composable
 private fun BookInfoSection() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = stringResource(R.string.hello_name),
-            modifier = Modifier.wrapContentWidth(),
-            style = MaterialTheme.typography.headlineLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
+        Column {
+            Text(
+                text = stringResource(R.string.hello_name),
+                modifier = Modifier.wrapContentWidth(),
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                )
             )
-        )
-        Text(
-            text = stringResource(R.string.book_description),
-            modifier = Modifier.wrapContentWidth(),
-            style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            ),
+            Text(
+                text = stringResource(R.string.book_description),
+                modifier = Modifier.wrapContentWidth(),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+            )
+        }
+        Image(
+            painter = painterResource(R.drawable.avatar_svgrepo_com),
+            alignment = Alignment.CenterEnd,
+            modifier = Modifier
+                .padding(top = MaterialTheme.spacing.small)
+                .weight(1f),
+            contentDescription = null,
         )
     }
 }
@@ -216,6 +229,30 @@ private fun BookCardPreview() {
             tonalElevation = 4.dp,
         ) {
             BookCard(book = bookState)
+        }
+    }
+}
+
+@Preview(
+    name = "BookScreen",
+    group = "Screens",
+    showBackground = true,
+)
+@Preview(
+    name = "BookScreen",
+    group = "Screens",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun BookInfoSectionPreview() {
+    BookAppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            tonalElevation = 4.dp,
+        ) {
+            BookInfoSection()
         }
     }
 }
