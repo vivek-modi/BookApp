@@ -10,10 +10,12 @@ object BooksNavigation
 
 fun NavGraphBuilder.booksScreen(
     onBackPressed: () -> Unit,
+    onNavigateToBookDetail: (Int) -> Unit,
 ) {
     composable<BooksNavigation> {
         BookScreen(
             onBackPressed = onBackPressed,
+            onNavigateToBookDetail = onNavigateToBookDetail
         )
     }
 }

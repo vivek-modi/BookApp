@@ -49,6 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun BookScreen(
     onBackPressed: () -> Unit,
+    onNavigateToBookDetail: (Int) -> Unit,
     viewModel: BooksViewModel = koinViewModel()
 ) {
 
@@ -74,7 +75,8 @@ internal fun BookScreen(
             if (uiState.books.isNotEmpty()) {
                 BookContent(
                     books = uiState.books,
-                    contentPadding = contentPadding
+                    contentPadding = contentPadding,
+                    onItemClick = onNavigateToBookDetail
                 )
             }
         }
@@ -85,6 +87,7 @@ internal fun BookScreen(
 private fun BookContent(
     books: List<Book>,
     contentPadding: PaddingValues,
+    onItemClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -105,7 +108,8 @@ private fun BookContent(
         items(items = books, key = { it.id }) { book ->
             BookCard(
                 book = book,
-                modifier = Modifier.animateItem()
+                modifier = Modifier.animateItem(),
+                onItemClick = onItemClick,
             )
         }
     }
@@ -146,9 +150,12 @@ private fun BookInfoSection() {
 }
 
 @Composable
-private fun BookCard(book: Book, modifier: Modifier = Modifier) {
+private fun BookCard(modifier: Modifier = Modifier, book: Book, onItemClick: (Int) -> Unit) {
     val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
     Card(
+        onClick = {
+            onItemClick(book.id)
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -228,7 +235,7 @@ private fun BookCardPreview() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 4.dp,
         ) {
-            BookCard(book = bookState)
+            BookCard(book = bookState) {}
         }
     }
 }
