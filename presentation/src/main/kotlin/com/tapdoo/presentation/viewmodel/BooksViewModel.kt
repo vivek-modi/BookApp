@@ -23,7 +23,7 @@ class BooksViewModel(private val getBooksUseCase: GetBooksUseCase) : ViewModel()
                 bookUiState = bookUiState.copy(books = books)
             }.onFailure { error ->
                 Log.e("BooksViewModel", "$error")
-                bookUiState = bookUiState.copy(error = error)
+                bookUiState = bookUiState.copy(error = error.message)
             }
             bookUiState = bookUiState.copy(isLoading = false)
         }

@@ -3,7 +3,11 @@ package com.tapdoo.network.ktor
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -16,6 +20,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 /**
  * Factory class for creating and configuring an instance of [HttpClient] using the Ktor library.
@@ -85,6 +92,45 @@ class KtorClient {
             install(HttpRequestRetry) {
                 // disable automatic retries for now.
                 retryOnExceptionOrServerErrors(maxRetries = 0)
+            }
+
+            /**
+             * Configures HTTP response validation and exception handling for Ktor's HttpClient.
+             *
+             * - Validates response status codes:
+             * - 400-499: Throws ClientRequestException.
+             * - 500-599: Throws ServerResponseException.
+             * - Handles exceptions during requests:
+             * - SocketTimeoutException: Throws HttpRequestTimeoutException.
+             * - UnknownHostException: Throws IOException (No internet connection).
+             */
+            HttpResponseValidator {
+                validateResponse { response ->
+                    when (val statusCode = response.status.value) {
+                        in 400..499 -> throw ClientRequestException(
+                            response,
+                            "Client error: $statusCode"
+                        )
+
+                        in 500..599 -> throw ServerResponseException(
+                            response,
+                            "Server error: $statusCode"
+                        )
+                    }
+                }
+                handleResponseExceptionWithRequest { exception, _ ->
+                    when (exception) {
+                        is SocketTimeoutException -> throw HttpRequestTimeoutException(
+                            "Request timed out. $exception",
+                            0
+                        )
+
+                        is UnknownHostException -> throw IOException(
+                            "No internet connection.",
+                            exception
+                        )
+                    }
+                }
             }
         }
     }

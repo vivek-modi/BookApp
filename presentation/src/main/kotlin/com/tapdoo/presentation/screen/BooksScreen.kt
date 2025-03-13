@@ -79,7 +79,7 @@ internal fun BookScreen(
 
     val uiState = viewModel.bookUiState
     val snackBarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(R.string.error)
+    val errorMessage = uiState.error?.takeIf { it.isNotEmpty() } ?: stringResource(R.string.error)
     val retryMessage = stringResource(R.string.retry_label)
     var imageWidth by remember { mutableIntStateOf(0) }
 
