@@ -2,4 +2,5 @@
     <string name="hello_name">Hello User</string>
     <string name="book_description">Get your desire books here…</string>
     <string name="novel_by">Novel by %1$s</string>
+    <string name="image_key">image-%1$s</string>
 </resources>

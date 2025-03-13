@@ -2,6 +2,9 @@ package com.tapdoo.presentation.screen
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -61,8 +64,11 @@ import com.tapdoo.ui.theme.BookAppTheme
 import com.tapdoo.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun BookScreen(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onBackPressed: () -> Unit,
     onNavigateToBookDetail: (Int, String) -> Unit,
     viewModel: BooksViewModel = koinViewModel()
@@ -90,12 +96,12 @@ internal fun BookScreen(
         ) { contentPadding ->
             if (uiState.books.isNotEmpty()) {
                 BookContent(
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = animatedContentScope,
                     books = uiState.books,
                     contentPadding = contentPadding,
                     imageWidth = imageWidth,
-                    onImageWidthChange = {
-                        imageWidth = it
-                    },
+                    onImageWidthChange = { imageWidth = it },
                     onItemClick = onNavigateToBookDetail,
                 )
             }
@@ -103,8 +109,11 @@ internal fun BookScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun BookContent(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     books: List<Book>,
     contentPadding: PaddingValues,
     imageWidth: Int,
@@ -133,6 +142,8 @@ private fun BookContent(
 
         items(items = books, key = { it.id }) { book ->
             BookCard(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = animatedContentScope,
                 book = book,
                 modifier = Modifier.animateItem(),
                 imageWidth = imageWidth,
@@ -177,126 +188,101 @@ private fun BookInfoSection() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun BookCard(
     modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     book: Book,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
     onItemClick: (Int, String) -> Unit,
 ) {
-    val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
-    val color = MaterialTheme.colorScheme.surfaceVariant
-    Card(
-        onClick = {
-            onItemClick(book.id, bookUrl)
-        },
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        shape = MaterialTheme.shapes.medium,
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .drawBehind {
-                    val leftEdge = imageWidth / 2
-                    drawRoundRect(
-                        color = color,
-                        topLeft = Offset(leftEdge.toFloat(), 0f),
-                        size = Size(size.width - leftEdge, size.height),
-                        cornerRadius = CornerRadius(MaterialTheme.spacing.extraMedium.toPx())
-                    )
-                }
-                .padding(
-                    top = MaterialTheme.spacing.medium,
-                    bottom = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium
-                ),
-            verticalAlignment = Alignment.CenterVertically
+    with(sharedTransitionScope) {
+        val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
+        val color = MaterialTheme.colorScheme.surfaceVariant
+        val imageKey = stringResource(R.string.image_key, book.id)
+        Card(
+            onClick = {
+                onItemClick(book.id, bookUrl)
+            },
+            modifier = modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            shape = MaterialTheme.shapes.medium,
         ) {
-            AsyncImage(
+            Row(
                 modifier = Modifier
-                    .onGloballyPositioned {
-                        onImageWidthChange(it.size.width)
+                    .fillMaxWidth()
+                    .drawBehind {
+                        val leftEdge = imageWidth / 2
+                        drawRoundRect(
+                            color = color,
+                            topLeft = Offset(leftEdge.toFloat(), 0f),
+                            size = Size(size.width - leftEdge, size.height),
+                            cornerRadius = CornerRadius(MaterialTheme.spacing.extraMedium.toPx())
+                        )
                     }
-                    .border(
-                        BorderStroke(
-                            MaterialTheme.spacing.extraSmall,
-                            MaterialTheme.colorScheme.outline
+                    .padding(
+                        top = MaterialTheme.spacing.medium,
+                        bottom = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = imageKey),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .onGloballyPositioned {
+                            onImageWidthChange(it.size.width)
+                        }
+                        .border(
+                            BorderStroke(
+                                MaterialTheme.spacing.extraSmall,
+                                MaterialTheme.colorScheme.outline
+                            ),
+                            RectangleShape
                         ),
-                        RectangleShape
-                    ),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(bookUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = book.title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = stringResource(R.string.novel_by, book.author),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(bookUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
                 )
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
-                Text(
-                    text = book.priceWithCurrency,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = book.title,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = stringResource(R.string.novel_by, book.author),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
+                    Text(
+                        text = book.priceWithCurrency,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
-        }
-    }
-}
-
-@Preview(
-    name = "BookCard",
-    group = "Components",
-    showBackground = true,
-)
-@Preview(
-    name = "BookCard",
-    group = "Components",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun BookCardPreview() {
-    val bookState = Book(
-        id = 1,
-        title = "My book",
-        priceWithCurrency = "$10.00",
-        author = "My Author",
-        isbn = "1234567890"
-    )
-    BookAppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            tonalElevation = 4.dp,
-        ) {
-            BookCard(
-                book = bookState,
-                imageWidth = 0,
-                onImageWidthChange = {}
-            ) { _, _ -> }
         }
     }
 }

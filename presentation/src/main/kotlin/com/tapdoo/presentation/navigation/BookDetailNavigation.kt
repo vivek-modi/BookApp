@@ -1,5 +1,7 @@
 package com.tapdoo.presentation.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -14,9 +16,18 @@ fun NavController.navigateToBookDetail(bookId: Int, bookIsbn: String) {
     navigate(BookDetailNavigation(bookId = bookId, bookUrl = bookIsbn))
 }
 
-fun NavGraphBuilder.bookDetailScreen(onBackPress: () -> Unit) {
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun NavGraphBuilder.bookDetailScreen(
+    sharedTransitionScope: SharedTransitionScope,
+    onBackPress: () -> Unit,
+) {
     composable<BookDetailNavigation> { backStackEntry ->
         val bookDetail: BookDetailNavigation = backStackEntry.toRoute()
-        BookDetailScreen(bookDetail, onBackPress)
+        BookDetailScreen(
+            sharedTransitionScope = sharedTransitionScope,
+            animatedContentScope = this@composable,
+            bookDetail = bookDetail,
+            onBackPress = onBackPress
+        )
     }
 }
