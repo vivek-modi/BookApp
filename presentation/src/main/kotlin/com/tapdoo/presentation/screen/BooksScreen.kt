@@ -92,7 +92,7 @@ internal fun BookScreen(
             snackBarHostState.showSnackbar(
                 message = errorMessage,
                 actionLabel = retryMessage,
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Short
             ).run {
                 if (this == SnackbarResult.ActionPerformed) {
                     viewModel.getBooks()

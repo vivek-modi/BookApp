@@ -17,6 +17,7 @@ class BookDetailViewModel(private val getBookDetailUseCase: GetBookDetailUseCase
 
     fun getBookDetail(bookId: Int) {
         viewModelScope.launch {
+            bookDetailUiState = bookDetailUiState.copy(isLoading = true)
             val result = getBookDetailUseCase(bookId)
             result.onSuccess { bookDetail ->
                 bookDetailUiState = bookDetailUiState.copy(bookDetail = bookDetail)
