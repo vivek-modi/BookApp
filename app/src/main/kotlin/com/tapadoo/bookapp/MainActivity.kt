@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.unit.dp
 import com.tapadoo.bookapp.navigation.BookNavHost
-import com.tapdoo.ui.theme.BookAppTheme
+import com.tapdoo.presentation.theme.BookAppTheme
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {

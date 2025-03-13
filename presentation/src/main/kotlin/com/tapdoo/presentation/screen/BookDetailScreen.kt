@@ -32,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
 import com.tapdoo.presentation.R
 import com.tapdoo.presentation.navigation.BookDetailNavigation
+import com.tapdoo.presentation.theme.spacing
 import com.tapdoo.presentation.viewmodel.BookDetailViewModel
-import com.tapdoo.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -60,7 +60,6 @@ internal fun BookDetailScreen(
 
     BackHandler(onBack = onBackPress)
 
-//    LoadingOverlay(isLoading = uiState.isLoading) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -81,16 +80,13 @@ internal fun BookDetailScreen(
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { contentPadding ->
-//            if (uiState.bookDetail != null) {
         BookDetailContent(
             sharedTransitionScope = sharedTransitionScope,
             animatedContentScope = animatedContentScope,
             contentPadding = contentPadding,
             bookDetail = bookDetail,
         )
-//            }
     }
-//    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)

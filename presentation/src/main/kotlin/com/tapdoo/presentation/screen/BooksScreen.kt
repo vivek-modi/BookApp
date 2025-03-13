@@ -58,10 +58,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tapdoo.domain.model.Book
 import com.tapdoo.presentation.R
+import com.tapdoo.presentation.components.LoadingOverlay
+import com.tapdoo.presentation.theme.BookAppTheme
+import com.tapdoo.presentation.theme.spacing
 import com.tapdoo.presentation.viewmodel.BooksViewModel
-import com.tapdoo.ui.components.LoadingOverlay
-import com.tapdoo.ui.theme.BookAppTheme
-import com.tapdoo.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)

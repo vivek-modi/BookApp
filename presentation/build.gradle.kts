@@ -39,7 +39,15 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    api(project(":core:ui"))
+
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.ui)
+    api(libs.androidx.ui.graphics)
+    api(libs.androidx.ui.tooling.preview)
+    api(libs.androidx.material3)
+    api(libs.androidx.foundation)
+    api(libs.androidx.foundation.layout)
+    api(libs.androidx.runtime)
 
     api(platform(libs.koin.bom))
     api(libs.koin.android)
