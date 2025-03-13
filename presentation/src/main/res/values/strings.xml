@@ -3,4 +3,7 @@
     <string name="book_description">Get your desire books here…</string>
     <string name="novel_by">Novel by %1$s</string>
     <string name="image_key">image-%1$s</string>
+    <string name="title_key">title-%1$s</string>
+    <string name="novel_key">novel-%1$s</string>
+    <string name="price_key">price-%1$s</string>
 </resources>

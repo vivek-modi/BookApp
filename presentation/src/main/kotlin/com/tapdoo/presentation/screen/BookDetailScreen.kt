@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -29,6 +30,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import coil3.compose.AsyncImage
 import com.tapdoo.presentation.R
 import com.tapdoo.presentation.navigation.BookDetailNavigation
@@ -97,8 +100,10 @@ private fun BookDetailContent(
     contentPadding: PaddingValues,
     bookDetail: BookDetailNavigation,
 ) {
-
+    val titleKey = stringResource(R.string.title_key, bookDetail.bookId)
     val imageKey = stringResource(R.string.image_key, bookDetail.bookId)
+    val novelKey = stringResource(R.string.novel_key, bookDetail.bookId)
+    val priceKey = stringResource(R.string.price_key, bookDetail.bookId)
     with(sharedTransitionScope) {
         LazyColumn(
             modifier = Modifier
@@ -124,6 +129,58 @@ private fun BookDetailContent(
                         .fillMaxWidth()
                         .aspectRatio(4f / 3f),
                     contentDescription = null,
+                )
+            }
+
+            item {
+                Text(
+
+                    text = bookDetail.bookTitle,
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = titleKey),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .fillMaxWidth()
+                        .padding(top = MaterialTheme.spacing.small),
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            item {
+                Text(
+                    text = stringResource(R.string.novel_by, bookDetail.bookAuthor),
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = novelKey),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            item {
+                Text(
+                    text = bookDetail.price,
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = priceKey),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign = TextAlign.Center,
                 )
             }
         }

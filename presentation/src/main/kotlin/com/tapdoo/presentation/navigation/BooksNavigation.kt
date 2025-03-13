@@ -14,7 +14,7 @@ object BooksNavigation
 fun NavGraphBuilder.booksScreen(
     sharedTransitionScope: SharedTransitionScope,
     onBackPressed: () -> Unit,
-    onNavigateToBookDetail: (Int, String) -> Unit,
+    onNavigateToBookDetail: (BookDetailNavigation) -> Unit,
 ) {
     composable<BooksNavigation> {
         BookScreen(

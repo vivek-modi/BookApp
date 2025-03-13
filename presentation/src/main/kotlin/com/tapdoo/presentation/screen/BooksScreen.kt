@@ -59,6 +59,7 @@ import coil3.request.crossfade
 import com.tapdoo.domain.model.Book
 import com.tapdoo.presentation.R
 import com.tapdoo.presentation.components.LoadingOverlay
+import com.tapdoo.presentation.navigation.BookDetailNavigation
 import com.tapdoo.presentation.theme.BookAppTheme
 import com.tapdoo.presentation.theme.spacing
 import com.tapdoo.presentation.viewmodel.BooksViewModel
@@ -70,7 +71,7 @@ internal fun BookScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     onBackPressed: () -> Unit,
-    onNavigateToBookDetail: (Int, String) -> Unit,
+    onNavigateToBookDetail: (BookDetailNavigation) -> Unit,
     viewModel: BooksViewModel = koinViewModel()
 ) {
 
@@ -118,7 +119,7 @@ private fun BookContent(
     contentPadding: PaddingValues,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
-    onItemClick: (Int, String) -> Unit,
+    onItemClick: (BookDetailNavigation) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -197,15 +198,26 @@ private fun BookCard(
     book: Book,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
-    onItemClick: (Int, String) -> Unit,
+    onItemClick: (BookDetailNavigation) -> Unit,
 ) {
     with(sharedTransitionScope) {
         val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
         val color = MaterialTheme.colorScheme.surfaceVariant
         val imageKey = stringResource(R.string.image_key, book.id)
+        val titleKey = stringResource(R.string.title_key, book.id)
+        val novelKey = stringResource(R.string.novel_key, book.id)
+        val priceKey = stringResource(R.string.price_key, book.id)
         Card(
             onClick = {
-                onItemClick(book.id, bookUrl)
+                onItemClick(
+                    BookDetailNavigation(
+                        bookId = book.id,
+                        bookUrl = bookUrl,
+                        bookTitle = book.title,
+                        bookAuthor = book.author,
+                        price = book.priceWithCurrency,
+                    )
+                )
             },
             modifier = modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -256,6 +268,10 @@ private fun BookCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = book.title,
+                        modifier = Modifier.sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = titleKey),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -265,6 +281,10 @@ private fun BookCard(
                     )
                     Text(
                         text = stringResource(R.string.novel_by, book.author),
+                        modifier = Modifier.sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = novelKey),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
@@ -274,6 +294,10 @@ private fun BookCard(
                     Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
                         text = book.priceWithCurrency,
+                        modifier = Modifier.sharedElement(
+                            sharedTransitionScope.rememberSharedContentState(key = priceKey),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

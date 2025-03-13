@@ -10,10 +10,16 @@ import com.tapdoo.presentation.screen.BookDetailScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BookDetailNavigation(val bookId: Int, val bookUrl: String)
+data class BookDetailNavigation(
+    val bookId: Int,
+    val bookUrl: String,
+    val bookTitle: String,
+    val bookAuthor: String,
+    val price: String,
+)
 
-fun NavController.navigateToBookDetail(bookId: Int, bookIsbn: String) {
-    navigate(BookDetailNavigation(bookId = bookId, bookUrl = bookIsbn))
+fun NavController.navigateToBookDetail(bookDetailNavigation: BookDetailNavigation) {
+    navigate(bookDetailNavigation)
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
