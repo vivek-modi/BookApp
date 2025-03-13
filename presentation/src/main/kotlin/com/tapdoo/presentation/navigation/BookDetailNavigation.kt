@@ -8,16 +8,15 @@ import com.tapdoo.presentation.screen.BookDetailScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BookDetailNavigation(val bookId: Int)
+data class BookDetailNavigation(val bookId: Int, val bookIsbn: String)
 
-fun NavController.navigateToBookDetail(bookId: Int) {
-    navigate(BookDetailNavigation(bookId = bookId))
+fun NavController.navigateToBookDetail(bookId: Int, bookIsbn: String) {
+    navigate(BookDetailNavigation(bookId = bookId, bookIsbn = bookIsbn))
 }
-
 
 fun NavGraphBuilder.bookDetailScreen() {
     composable<BookDetailNavigation> { backStackEntry ->
         val bookDetail: BookDetailNavigation = backStackEntry.toRoute()
-        BookDetailScreen(bookDetail.bookId)
+        BookDetailScreen(bookDetail)
     }
 }

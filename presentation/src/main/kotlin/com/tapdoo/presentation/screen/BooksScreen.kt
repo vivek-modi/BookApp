@@ -62,7 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun BookScreen(
     onBackPressed: () -> Unit,
-    onNavigateToBookDetail: (Int) -> Unit,
+    onNavigateToBookDetail: (Int, String) -> Unit,
     viewModel: BooksViewModel = koinViewModel()
 ) {
 
@@ -107,7 +107,7 @@ private fun BookContent(
     contentPadding: PaddingValues,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Int, String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -181,13 +181,13 @@ private fun BookCard(
     book: Book,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Int, String) -> Unit,
 ) {
     val bookUrl = "https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg"
     val color = MaterialTheme.colorScheme.surfaceVariant
     Card(
         onClick = {
-            onItemClick(book.id)
+            onItemClick(book.id, book.isbn)
         },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -294,7 +294,7 @@ private fun BookCardPreview() {
                 book = bookState,
                 imageWidth = 0,
                 onImageWidthChange = {}
-            ) {}
+            ) { _, _ -> }
         }
     }
 }

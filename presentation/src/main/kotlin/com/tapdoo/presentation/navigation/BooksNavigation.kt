@@ -10,7 +10,7 @@ object BooksNavigation
 
 fun NavGraphBuilder.booksScreen(
     onBackPressed: () -> Unit,
-    onNavigateToBookDetail: (Int) -> Unit,
+    onNavigateToBookDetail: (Int, String) -> Unit,
 ) {
     composable<BooksNavigation> {
         BookScreen(
