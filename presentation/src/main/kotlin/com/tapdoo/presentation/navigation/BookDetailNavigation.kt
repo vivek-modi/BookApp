@@ -14,9 +14,9 @@ fun NavController.navigateToBookDetail(bookId: Int, bookIsbn: String) {
     navigate(BookDetailNavigation(bookId = bookId, bookUrl = bookIsbn))
 }
 
-fun NavGraphBuilder.bookDetailScreen() {
+fun NavGraphBuilder.bookDetailScreen(onBackPress: () -> Unit) {
     composable<BookDetailNavigation> { backStackEntry ->
         val bookDetail: BookDetailNavigation = backStackEntry.toRoute()
-        BookDetailScreen(bookDetail)
+        BookDetailScreen(bookDetail, onBackPress)
     }
 }

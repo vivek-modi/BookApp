@@ -25,6 +25,6 @@ fun BookNavHost(
             },
             onNavigateToBookDetail = navHostController::navigateToBookDetail
         )
-        bookDetailScreen()
+        bookDetailScreen(navHostController::navigateUp)
     }
 }
