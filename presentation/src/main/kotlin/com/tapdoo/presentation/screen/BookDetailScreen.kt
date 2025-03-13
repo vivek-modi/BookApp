@@ -31,7 +31,6 @@ internal fun BookDetailScreen(
     bookDetail: BookDetailNavigation,
     viewModel: BookDetailViewModel = koinViewModel()
 ) {
-    val bookUrl = "https://covers.openlibrary.org/b/isbn/${bookDetail.bookIsbn}-L.jpg"
     val uiState = viewModel.bookDetailUiState
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -52,7 +51,7 @@ internal fun BookDetailScreen(
             if (uiState.bookDetail != null) {
                 BookDetailContent(
                     contentPadding = contentPadding,
-                    bookUrl = bookUrl,
+                    bookUrl = bookDetail.bookUrl,
                 )
             }
         }
