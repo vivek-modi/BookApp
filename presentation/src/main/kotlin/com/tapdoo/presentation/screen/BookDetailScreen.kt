@@ -21,8 +21,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -53,6 +55,8 @@ internal fun BookDetailScreen(
 ) {
     val uiState = viewModel.bookDetailUiState
     val snackBarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(R.string.error)
+    val retryMessage = stringResource(R.string.retry_label)
 
     LaunchedEffect(viewModel) {
         viewModel.getBookDetail(bookDetail.bookId)
@@ -60,7 +64,15 @@ internal fun BookDetailScreen(
 
     LaunchedEffect(uiState) {
         if (uiState.error != null) {
-            snackBarHostState.showSnackbar("Unknown Error")
+            snackBarHostState.showSnackbar(
+                message = errorMessage,
+                actionLabel = retryMessage,
+                duration = SnackbarDuration.Long
+            ).run {
+                if (this == SnackbarResult.ActionPerformed) {
+                    viewModel.getBookDetail(bookDetail.bookId)
+                }
+            }
         }
     }
 

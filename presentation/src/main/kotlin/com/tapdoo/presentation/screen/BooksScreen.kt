@@ -27,8 +27,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,6 +79,8 @@ internal fun BookScreen(
 
     val uiState = viewModel.bookUiState
     val snackBarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(R.string.error)
+    val retryMessage = stringResource(R.string.retry_label)
     var imageWidth by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel) {
@@ -85,7 +89,15 @@ internal fun BookScreen(
 
     LaunchedEffect(uiState) {
         if (uiState.error != null) {
-            snackBarHostState.showSnackbar("Unknown Error")
+            snackBarHostState.showSnackbar(
+                message = errorMessage,
+                actionLabel = retryMessage,
+                duration = SnackbarDuration.Long
+            ).run {
+                if (this == SnackbarResult.ActionPerformed) {
+                    viewModel.getBooks()
+                }
+            }
         }
     }
 

@@ -7,4 +7,6 @@
     <string name="novel_key">novel-%1$s</string>
     <string name="price_key">price-%1$s</string>
     <string name="description">Description</string>
+    <string name="error">Error happened</string>
+    <string name="retry_label">Retry</string>
 </resources>
