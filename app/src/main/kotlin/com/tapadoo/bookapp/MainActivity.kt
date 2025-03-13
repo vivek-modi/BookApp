@@ -6,9 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.ui.unit.dp
 import com.tapadoo.bookapp.navigation.BookNavHost
 import com.tapdoo.presentation.theme.BookAppTheme
+import com.tapdoo.presentation.theme.size
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     Surface(
                         color = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.onSurface,
-                        tonalElevation = 4.dp,
+                        tonalElevation = MaterialTheme.size.extraSmall,
                     ) {
                         BookNavHost()
                     }

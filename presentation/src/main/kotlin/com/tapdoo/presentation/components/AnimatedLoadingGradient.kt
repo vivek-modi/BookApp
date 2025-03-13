@@ -30,8 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
 import com.tapdoo.presentation.theme.BookAppTheme
+import com.tapdoo.presentation.theme.size
+import com.tapdoo.presentation.theme.spacing
 
 @Composable
 fun AnimatedLoadingGradient() {
@@ -42,21 +43,21 @@ fun AnimatedLoadingGradient() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(16.dp)
+            .padding(MaterialTheme.spacing.medium)
     ) {
         Box(
             modifier = Modifier
-                .height(20.dp)
+                .height(MaterialTheme.spacing.large)
                 .fillMaxWidth()
                 .animatedGradient(
                     primaryColor = primaryColor,
                     containerColor = containerColor
                 )
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         Box(
             modifier = Modifier
-                .height(20.dp)
+                .height(MaterialTheme.spacing.large)
                 .fillMaxWidth()
                 .animatedGradient(
                     primaryColor = primaryColor,
@@ -64,10 +65,10 @@ fun AnimatedLoadingGradient() {
                 )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         Box(
             modifier = Modifier
-                .height(20.dp)
+                .height(MaterialTheme.spacing.large)
                 .fillMaxWidth(fraction = 0.7f)
                 .animatedGradient(
                     primaryColor = primaryColor,
@@ -102,12 +103,11 @@ fun Modifier.animatedGradient(
             start = Offset(x = offsetXAnimation, y = 0f),
             end = Offset(x = offsetXAnimation + size.width.toFloat(), y = size.height.toFloat())
         ),
-        shape = RoundedCornerShape(24.dp)
+        shape = RoundedCornerShape(MaterialTheme.size.large)
     ).onGloballyPositioned {
         size = it.size
     }
 }
-
 
 @Preview(
     name = "AnimatedLoadingGradient",

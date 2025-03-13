@@ -52,7 +52,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -61,6 +60,7 @@ import com.tapdoo.presentation.R
 import com.tapdoo.presentation.components.LoadingOverlay
 import com.tapdoo.presentation.navigation.BookDetailNavigation
 import com.tapdoo.presentation.theme.BookAppTheme
+import com.tapdoo.presentation.theme.size
 import com.tapdoo.presentation.theme.spacing
 import com.tapdoo.presentation.viewmodel.BooksViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -328,7 +328,7 @@ private fun BookInfoSectionPreview() {
         Surface(
             color = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            tonalElevation = 4.dp,
+            tonalElevation = MaterialTheme.size.extraSmall,
         ) {
             BookInfoSection()
         }
