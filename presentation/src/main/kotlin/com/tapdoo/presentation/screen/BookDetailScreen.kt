@@ -104,6 +104,7 @@ private fun BookDetailContent(
     val imageKey = stringResource(R.string.image_key, bookDetail.bookId)
     val novelKey = stringResource(R.string.novel_key, bookDetail.bookId)
     val priceKey = stringResource(R.string.price_key, bookDetail.bookId)
+
     with(sharedTransitionScope) {
         LazyColumn(
             modifier = Modifier
@@ -134,7 +135,6 @@ private fun BookDetailContent(
 
             item {
                 Text(
-
                     text = bookDetail.bookTitle,
                     modifier = Modifier
                         .sharedElement(
@@ -143,9 +143,9 @@ private fun BookDetailContent(
                         )
                         .fillMaxWidth()
                         .padding(top = MaterialTheme.spacing.small),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge.copy(
                         color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold,
                     ),
                     textAlign = TextAlign.Center,
                 )
@@ -160,7 +160,8 @@ private fun BookDetailContent(
                             animatedVisibilityScope = animatedContentScope
                         )
                         .fillMaxWidth(),
-                    style = MaterialTheme.typography.titleMedium.copy(
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                     textAlign = TextAlign.Center,
@@ -176,11 +177,23 @@ private fun BookDetailContent(
                             animatedVisibilityScope = animatedContentScope
                         )
                         .fillMaxWidth(),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold,
                     ),
                     textAlign = TextAlign.Center,
+                )
+            }
+
+            item {
+                Text(
+                    text = stringResource(R.string.description),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MaterialTheme.spacing.small),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
                 )
             }
         }
