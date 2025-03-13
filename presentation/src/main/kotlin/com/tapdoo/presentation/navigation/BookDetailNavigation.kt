@@ -1,9 +1,10 @@
 package com.tapdoo.presentation.navigation
 
-import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.tapdoo.presentation.screen.BookDetailScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,7 +16,8 @@ fun NavController.navigateToBookDetail(bookId: Int) {
 
 
 fun NavGraphBuilder.bookDetailScreen() {
-    composable<BookDetailNavigation> {
-        Text("Hello world")
+    composable<BookDetailNavigation> { backStackEntry ->
+        val bookDetail: BookDetailNavigation = backStackEntry.toRoute()
+        BookDetailScreen(bookDetail.bookId)
     }
 }

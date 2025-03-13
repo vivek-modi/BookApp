@@ -1,5 +1,6 @@
 package com.tapdoo.data.di
 
+import com.tapdoo.data.mapper.BookDetailMapper
 import com.tapdoo.data.mapper.BookMapper
 import com.tapdoo.data.repository.BookRemoteDataSource
 import com.tapdoo.data.service.RealCurrencyService
@@ -21,4 +22,5 @@ val dataModule = lazyModule {
         bind<CurrencyService>()
     }
     singleOf(::BookMapper)
+    singleOf(::BookDetailMapper)
 }

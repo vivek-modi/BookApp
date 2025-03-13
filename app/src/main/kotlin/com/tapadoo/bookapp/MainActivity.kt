@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.unit.dp
 import com.tapadoo.bookapp.navigation.BookNavHost
 import com.tapdoo.ui.theme.BookAppTheme
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,12 +17,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BookAppTheme {
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    tonalElevation = 4.dp,
-                ) {
-                    BookNavHost()
+                KoinContext {
+                    Surface(
+                        color = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        tonalElevation = 4.dp,
+                    ) {
+                        BookNavHost()
+                    }
                 }
             }
         }
