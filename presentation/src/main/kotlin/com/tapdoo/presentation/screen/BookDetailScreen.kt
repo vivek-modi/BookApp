@@ -2,6 +2,7 @@ package com.tapdoo.presentation.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import coil3.compose.AsyncImage
 import com.tapdoo.presentation.R
+import com.tapdoo.presentation.components.AnimatedLoadingGradient
 import com.tapdoo.presentation.navigation.BookDetailNavigation
+import com.tapdoo.presentation.state.BookDetailUiState
 import com.tapdoo.presentation.theme.spacing
 import com.tapdoo.presentation.viewmodel.BookDetailViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -87,7 +90,8 @@ internal fun BookDetailScreen(
             sharedTransitionScope = sharedTransitionScope,
             animatedContentScope = animatedContentScope,
             contentPadding = contentPadding,
-            bookDetail = bookDetail,
+            bookDetailNavigation = bookDetail,
+            uiState = uiState
         )
     }
 }
@@ -98,12 +102,13 @@ private fun BookDetailContent(
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     contentPadding: PaddingValues,
-    bookDetail: BookDetailNavigation,
+    bookDetailNavigation: BookDetailNavigation,
+    uiState: BookDetailUiState,
 ) {
-    val titleKey = stringResource(R.string.title_key, bookDetail.bookId)
-    val imageKey = stringResource(R.string.image_key, bookDetail.bookId)
-    val novelKey = stringResource(R.string.novel_key, bookDetail.bookId)
-    val priceKey = stringResource(R.string.price_key, bookDetail.bookId)
+    val titleKey = stringResource(R.string.title_key, bookDetailNavigation.bookId)
+    val imageKey = stringResource(R.string.image_key, bookDetailNavigation.bookId)
+    val novelKey = stringResource(R.string.novel_key, bookDetailNavigation.bookId)
+    val priceKey = stringResource(R.string.price_key, bookDetailNavigation.bookId)
 
     with(sharedTransitionScope) {
         LazyColumn(
@@ -121,7 +126,7 @@ private fun BookDetailContent(
 
             item {
                 AsyncImage(
-                    model = bookDetail.bookUrl,
+                    model = bookDetailNavigation.bookUrl,
                     modifier = Modifier
                         .sharedElement(
                             sharedTransitionScope.rememberSharedContentState(key = imageKey),
@@ -135,7 +140,7 @@ private fun BookDetailContent(
 
             item {
                 Text(
-                    text = bookDetail.bookTitle,
+                    text = bookDetailNavigation.bookTitle,
                     modifier = Modifier
                         .sharedElement(
                             sharedTransitionScope.rememberSharedContentState(key = titleKey),
@@ -153,7 +158,7 @@ private fun BookDetailContent(
 
             item {
                 Text(
-                    text = stringResource(R.string.novel_by, bookDetail.bookAuthor),
+                    text = stringResource(R.string.novel_by, bookDetailNavigation.bookAuthor),
                     modifier = Modifier
                         .sharedElement(
                             sharedTransitionScope.rememberSharedContentState(key = novelKey),
@@ -170,7 +175,7 @@ private fun BookDetailContent(
 
             item {
                 Text(
-                    text = bookDetail.price,
+                    text = bookDetailNavigation.price,
                     modifier = Modifier
                         .sharedElement(
                             sharedTransitionScope.rememberSharedContentState(key = priceKey),
@@ -190,11 +195,30 @@ private fun BookDetailContent(
                     text = stringResource(R.string.description),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.spacing.small),
+                        .padding(top = MaterialTheme.spacing.small),
                     style = MaterialTheme.typography.titleLarge.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                 )
+            }
+
+            item {
+                AnimatedVisibility(!uiState.isLoading) {
+                    uiState.bookDetail?.let {
+                        Text(
+                            text = it.description,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Justify,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
+                        )
+                    }
+                }
+                AnimatedVisibility(uiState.isLoading) {
+                    AnimatedLoadingGradient()
+                }
             }
         }
     }
