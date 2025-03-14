@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -103,20 +101,24 @@ internal fun BookScreen(
 
     BackHandler(onBack = onBackPressed)
 
-    LoadingOverlay(isLoading = uiState.isLoading) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackBarHostState) }
-        ) { contentPadding ->
-            if (uiState.books.isNotEmpty()) {
-                BookContent(
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedContentScope = animatedContentScope,
-                    books = uiState.books,
-                    contentPadding = contentPadding,
-                    imageWidth = imageWidth,
-                    onImageWidthChange = { imageWidth = it },
-                    onItemClick = onNavigateToBookDetail,
-                )
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) { contentPadding ->
+        Column {
+            BookInfoSection(contentPadding)
+            LoadingOverlay(isLoading = uiState.isLoading) {
+                if (uiState.books.isNotEmpty()) {
+                    BookContent(
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedContentScope = animatedContentScope,
+                        books = uiState.books,
+                        contentPadding = contentPadding,
+                        imageWidth = imageWidth,
+                        onImageWidthChange = { imageWidth = it },
+                        onItemClick = onNavigateToBookDetail,
+                    )
+                }
             }
         }
     }
@@ -137,21 +139,9 @@ private fun BookContent(
         modifier = Modifier
             .fillMaxSize()
             .consumeWindowInsets(contentPadding)
-            .imePadding()
-            .padding(
-                vertical = MaterialTheme.spacing.medium,
-                horizontal = MaterialTheme.spacing.medium
-            ),
-        contentPadding = contentPadding,
+            .padding(horizontal = MaterialTheme.spacing.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
     ) {
-        item {
-            BookInfoSection()
-        }
-
-        item {
-            Spacer(Modifier.height(MaterialTheme.spacing.extraLarge))
-        }
 
         items(items = books, key = { it.id }) { book ->
             BookCard(
@@ -168,9 +158,15 @@ private fun BookContent(
 }
 
 @Composable
-private fun BookInfoSection() {
+private fun BookInfoSection(contentPadding: PaddingValues) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(contentPadding)
+            .padding(
+                horizontal = MaterialTheme.spacing.medium,
+                vertical = MaterialTheme.spacing.medium
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
@@ -342,7 +338,7 @@ private fun BookInfoSectionPreview() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = MaterialTheme.size.extraSmall,
         ) {
-            BookInfoSection()
+            BookInfoSection(PaddingValues(MaterialTheme.spacing.medium))
         }
     }
 }
