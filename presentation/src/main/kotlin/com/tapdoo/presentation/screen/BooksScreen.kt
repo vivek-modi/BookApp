@@ -21,14 +21,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
@@ -76,37 +74,20 @@ internal fun BookScreen(
 ) {
 
     val uiState = viewModel.bookUiState
-    val snackBarHostState = remember { SnackbarHostState() }
-    val errorMessage = uiState.error?.takeIf { it.isNotEmpty() } ?: stringResource(R.string.error)
-    val retryMessage = stringResource(R.string.retry_label)
     var imageWidth by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel) {
         viewModel.getBooks()
     }
 
-    LaunchedEffect(uiState) {
-        if (uiState.error != null) {
-            snackBarHostState.showSnackbar(
-                message = errorMessage,
-                actionLabel = retryMessage,
-                duration = SnackbarDuration.Short
-            ).run {
-                if (this == SnackbarResult.ActionPerformed) {
-                    viewModel.getBooks()
-                }
-            }
-        }
-    }
-
     BackHandler(onBack = onBackPressed)
 
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) }
-    ) { contentPadding ->
+    Scaffold { contentPadding ->
         Column {
             BookInfoSection(contentPadding)
+            if (!uiState.isLoading && uiState.isError) {
+                RetryView(viewModel::getBooks)
+            }
             LoadingOverlay(isLoading = uiState.isLoading) {
                 if (uiState.books.isNotEmpty()) {
                     BookContent(
@@ -120,6 +101,41 @@ internal fun BookScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+private fun RetryView(onRetryClick: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_retry),
+            alignment = Alignment.Center,
+            contentDescription = null,
+        )
+        Text(
+            text = stringResource(R.string.error_generic_retry),
+            style = MaterialTheme.typography.titleLarge.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
+            textAlign = TextAlign.Center
+        )
+        Button(
+            onClick = onRetryClick,
+            modifier = Modifier.padding(vertical = MaterialTheme.spacing.extraMedium),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.retry_label),
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
         }
     }
 }
