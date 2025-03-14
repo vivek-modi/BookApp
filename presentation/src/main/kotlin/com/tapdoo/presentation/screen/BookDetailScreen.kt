@@ -2,7 +2,6 @@ package com.tapdoo.presentation.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
@@ -215,7 +214,7 @@ private fun BookDetailContent(
             }
 
             item {
-                AnimatedVisibility(!uiState.isLoading) {
+                if (!uiState.isLoading) {
                     uiState.bookDetail?.let {
                         Text(
                             text = it.description,
@@ -228,7 +227,7 @@ private fun BookDetailContent(
                         )
                     }
                 }
-                AnimatedVisibility(uiState.isLoading) {
+                if (uiState.isLoading) {
                     AnimatedLoadingGradient()
                 }
             }
