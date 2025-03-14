@@ -105,12 +105,10 @@ internal fun BookScreen(
     }
 }
 
-
 @Composable
 private fun RetryView(onRetryClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -120,7 +118,7 @@ private fun RetryView(onRetryClick: () -> Unit) {
         )
         Text(
             text = stringResource(R.string.error_generic_retry),
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
             textAlign = TextAlign.Center
