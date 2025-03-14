@@ -219,7 +219,8 @@ private fun BookDetailContent(
                         Text(
                             text = it.description,
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .padding(horizontal = MaterialTheme.spacing.small),
                             textAlign = TextAlign.Justify,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
