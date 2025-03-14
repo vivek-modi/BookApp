@@ -35,5 +35,13 @@ android {
 
 dependencies {
 
+    implementation(platform(libs.koin.bom))
+
     api(libs.serialization.json)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit4)
 }
