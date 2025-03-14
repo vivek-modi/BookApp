@@ -1,4 +1,4 @@
-package com.tapdoo.data.coroutine
+package com.tapdoo.presentation.coroutine
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
