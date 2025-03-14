@@ -17,6 +17,7 @@ object Size {
     val small = 8.dp
     val medium = 16.dp
     val large = 24.dp
+    val Card = 120.dp
 }
 
 val MaterialTheme.size: Size

@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -100,7 +100,6 @@ internal fun BookScreen(
                         sharedTransitionScope = sharedTransitionScope,
                         animatedContentScope = animatedContentScope,
                         books = uiState.books,
-                        contentPadding = contentPadding,
                         imageWidth = imageWidth,
                         onImageWidthChange = { imageWidth = it },
                         onItemClick = onNavigateToBookDetail,
@@ -150,7 +149,6 @@ private fun BookContent(
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     books: List<Book>,
-    contentPadding: PaddingValues,
     imageWidth: Int,
     onImageWidthChange: (Int) -> Unit,
     onItemClick: (BookDetailNavigation) -> Unit,
@@ -158,8 +156,8 @@ private fun BookContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .consumeWindowInsets(contentPadding)
-            .padding(horizontal = MaterialTheme.spacing.medium),
+            .padding(horizontal = MaterialTheme.spacing.medium)
+            .padding(bottom = MaterialTheme.spacing.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
     ) {
 
@@ -253,6 +251,7 @@ private fun BookCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .requiredHeight(MaterialTheme.size.Card)
                     .drawBehind {
                         val leftEdge = imageWidth / 2
                         drawRoundRect(
