@@ -22,14 +22,14 @@ class BookMapper(private val currencyService: CurrencyService) {
 
     private fun BookApiModel.toBook(): Book {
         return Book(
-            id = this.id,
-            title = this.title,
-            isbn = this.isbn,
+            id = id,
+            title = title,
+            isbn = isbn,
             priceWithCurrency = currencyService.getPriceWithCurrency(
-                this.price,
-                this.currencyCode
+                price,
+                currencyCode
             ),
-            author = this.author,
+            author = author
         )
     }
 }

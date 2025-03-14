@@ -1,7 +1,7 @@
 package com.tapdoo.data.service
 
 import com.tapdoo.domain.repository.CurrencyService
-import java.text.NumberFormat
+import java.text.NumberFormat.getCurrencyInstance
 import java.util.Currency
 
 /**
@@ -14,7 +14,7 @@ class RealCurrencyService : CurrencyService {
 
     override fun getPriceWithCurrency(currencyValue: Int, currencyCode: String): String {
         return try {
-            val format: NumberFormat = NumberFormat.getCurrencyInstance()
+            val format = getCurrencyInstance()
             format.currency = Currency.getInstance(currencyCode)
             format.format(currencyValue / 100.0)
         } catch (e: IllegalArgumentException) {
