@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -95,6 +97,26 @@ internal fun BookDetailScreen(
                 },
             )
         },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { },
+                icon = {},
+                containerColor = MaterialTheme.colorScheme.primary,
+                text = {
+                    Text(
+                        text = bookDetail.price,
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(end = MaterialTheme.spacing.extraMedium),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        textAlign = TextAlign.Center,
+                    )
+                },
+            )
+        },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { contentPadding ->
         BookDetailContent(
@@ -119,7 +141,6 @@ private fun BookDetailContent(
     val titleKey = stringResource(R.string.title_key, bookDetailNavigation.bookId)
     val imageKey = stringResource(R.string.image_key, bookDetailNavigation.bookId)
     val novelKey = stringResource(R.string.novel_key, bookDetailNavigation.bookId)
-    val priceKey = stringResource(R.string.price_key, bookDetailNavigation.bookId)
 
     with(sharedTransitionScope) {
         LazyColumn(
@@ -179,23 +200,6 @@ private fun BookDetailContent(
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-            item {
-                Text(
-                    text = bookDetailNavigation.price,
-                    modifier = Modifier
-                        .sharedElement(
-                            sharedTransitionScope.rememberSharedContentState(key = priceKey),
-                            animatedVisibilityScope = animatedContentScope
-                        )
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
                     ),
                     textAlign = TextAlign.Center,
                 )

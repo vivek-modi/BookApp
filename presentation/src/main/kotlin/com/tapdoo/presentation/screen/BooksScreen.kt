@@ -228,7 +228,6 @@ private fun BookCard(
         val imageKey = stringResource(R.string.image_key, book.id)
         val titleKey = stringResource(R.string.title_key, book.id)
         val novelKey = stringResource(R.string.novel_key, book.id)
-        val priceKey = stringResource(R.string.price_key, book.id)
         Card(
             onClick = {
                 onItemClick(
@@ -316,10 +315,6 @@ private fun BookCard(
                     Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
                         text = book.priceWithCurrency,
-                        modifier = Modifier.sharedElement(
-                            sharedTransitionScope.rememberSharedContentState(key = priceKey),
-                            animatedVisibilityScope = animatedContentScope
-                        ),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
